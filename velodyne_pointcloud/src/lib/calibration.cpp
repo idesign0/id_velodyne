@@ -85,10 +85,10 @@ constexpr char FOCAL_SLOPE[] = "focal_slope";
 /** Read calibration for a single laser. */
 void operator>>(const YAML::Node & node, std::pair<int, LaserCorrection> & correction)
 {
-  node[LASER_ID] >> correction.first;
-  node[ROT_CORRECTION] >> correction.second.rot_correction;
-  node[VERT_CORRECTION] >> correction.second.vert_correction;
-  node[DIST_CORRECTION] >> correction.second.dist_correction;
+  correction.first = node[LASER_ID].as<int>();
+  correction.second.rot_correction = node[ROT_CORRECTION].as<double>();
+  correction.second.vert_correction = node[VERT_CORRECTION].as<double>();
+  correction.second.dist_correction = node[DIST_CORRECTION].as<double>();
 
 #ifdef HAVE_NEW_YAMLCPP
 
@@ -105,9 +105,9 @@ void operator>>(const YAML::Node & node, std::pair<int, LaserCorrection> & corre
     correction.second.two_pt_correction_available = false;
   }
 
-  node[DIST_CORRECTION_X] >> correction.second.dist_correction_x;
-  node[DIST_CORRECTION_Y] >> correction.second.dist_correction_y;
-  node[VERT_OFFSET_CORRECTION] >> correction.second.vert_offset_correction;
+correction.second.dist_correction_x = node[DIST_CORRECTION_X].as<float>();
+correction.second.dist_correction_y = node[DIST_CORRECTION_Y].as<float>();
+correction.second.vert_offset_correction = node[VERT_OFFSET_CORRECTION].as<float>();
 
 #ifdef HAVE_NEW_YAMLCPP
 
@@ -160,8 +160,9 @@ void operator>>(const YAML::Node & node, std::pair<int, LaserCorrection> & corre
 
   correction.second.min_intensity = ::floorf(min_intensity_float);
 
-  node[FOCAL_DISTANCE] >> correction.second.focal_distance;
-  node[FOCAL_SLOPE] >> correction.second.focal_slope;
+  correction.second.focal_distance = node[FOCAL_DISTANCE].as<float>();
+  correction.second.focal_slope    = node[FOCAL_SLOPE].as<float>();
+
 
   // Calculate cached values
   correction.second.cos_rot_correction =
@@ -179,10 +180,8 @@ void operator>>(const YAML::Node & node, std::pair<int, LaserCorrection> & corre
 /** Read entire calibration file. */
 void operator>>(const YAML::Node & node, Calibration & calibration)
 {
-  int num_lasers;
-  node[NUM_LASERS] >> num_lasers;
-  float distance_resolution_m;
-  node[DISTANCE_RESOLUTION] >> distance_resolution_m;
+  int num_lasers = node[NUM_LASERS].as<int>();
+  float distance_resolution_m = node[DISTANCE_RESOLUTION].as<float>();
   const YAML::Node & lasers = node[LASERS];
   calibration.laser_corrections.clear();
   calibration.num_lasers = num_lasers;

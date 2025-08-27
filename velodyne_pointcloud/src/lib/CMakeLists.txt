@@ -9,6 +9,7 @@ ament_target_dependencies(velodyne_rawdata
   tf2
   tf2_ros
   velodyne_msgs
+  yaml_cpp_vendor
 )
 target_link_libraries(velodyne_rawdata
   ${PCL_LIBRARIES}

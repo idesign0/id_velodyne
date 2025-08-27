@@ -23,19 +23,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(velodyne_msgs REQUIRED)
-
-# Resolve system dependency on yaml-cpp, which apparently does not
-# provide a CMake find_package() module.
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
-find_path(YAML_CPP_INCLUDE_DIR
-  NAMES yaml_cpp.h
-  PATHS ${YAML_CPP_INCLUDE_DIRS})
-find_library(YAML_CPP_LIBRARY
-  NAMES YAML_CPP
-  PATHS ${YAML_CPP_LIBRARY_DIRS})
-
-link_directories(${YAML_CPP_LIBRARY_DIRS})
+find_package(yaml_cpp_vendor REQUIRED)
 
 if(NOT ${YAML_CPP_VERSION} VERSION_LESS "0.5")
   add_definitions(-DHAVE_NEW_YAMLCPP)
@@ -54,6 +42,7 @@ ament_target_dependencies(transform
   rclcpp_components
   tf2
   tf2_ros
+  yaml_cpp_vendor
 )
 target_link_libraries(transform
   velodyne_cloud_types
